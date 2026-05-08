@@ -1,0 +1,43 @@
+{
+  "scale": "500k",
+  "csv": {
+    "write_avg_s": 1.9081,
+    "file_size_bytes": 51821050,
+    "path": "data/transactions_500k.csv",
+    "read_full_avg_s": 1.242,
+    "read_selective_avg_s": 0.2349,
+    "peak_memory_mb": 119.34
+  },
+  "jsonl": {
+    "write_avg_s": 1.911,
+    "file_size_bytes": 98820969,
+    "path": "data/transactions_500k.jsonl",
+    "read_full_avg_s": 15.9973,
+    "read_selective_avg_s": 2.7452,
+    "peak_memory_mb": 1168.49
+  },
+  "parquet_none": {
+    "write_avg_s": 0.2615,
+    "file_size_bytes": 31461468,
+    "path": "data/transactions_500k_none.parquet",
+    "read_full_avg_s": 0.0795,
+    "read_selective_avg_s": 0.012,
+    "peak_memory_mb": 30.65
+  },
+  "parquet_snappy": {
+    "write_avg_s": 0.2961,
+    "file_size_bytes": 27486273,
+    "path": "data/transactions_500k_snappy.parquet",
+    "read_full_avg_s": 0.1063,
+    "read_selective_avg_s": 0.0147,
+    "peak_memory_mb": 26.35
+  },
+  "parquet_gzip": {
+    "write_avg_s": 3.2826,
+    "file_size_bytes": 18810867,
+    "path": "data/transactions_500k_gzip.parquet",
+    "read_full_avg_s": 0.1251,
+    "read_selective_avg_s": 0.0139,
+    "peak_memory_mb": 18.07
+  }
+}
