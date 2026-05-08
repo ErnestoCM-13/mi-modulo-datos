@@ -2,7 +2,10 @@ import time
 import pandas as pd
 from pathlib import Path
 
-def get_path(data_dir, fmt, size):
+def get_path(fmt, size):
+    base_dir = Path(__file__).resolve().parent.parent.parent
+    data_dir = base_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
     names = {
         'csv':            f'transactions_{size}.csv',
         'jsonl':          f'transactions_{size}.jsonl',
@@ -10,7 +13,7 @@ def get_path(data_dir, fmt, size):
         'parquet_snappy': f'transactions_{size}_snappy.parquet',
         'parquet_gzip':   f'transactions_{size}_gzip.parquet',
     }
-    return Path(data_dir) / names[fmt]
+    return data_dir / names[fmt]
 
 WRITERS = {
     'csv':            lambda df, p: df.to_csv(p, index=False),
@@ -20,8 +23,8 @@ WRITERS = {
     'parquet_gzip':   lambda df, p: df.to_parquet(p, compression='gzip',   index=False),
 }
 
-def benchmark_write(df, fmt, size, data_dir='data', repetitions=3):
-    path = get_path(data_dir, fmt, size)
+def benchmark_write(df, fmt, size, repetitions=3):
+    path = get_path(fmt, size)
     write_fn = WRITERS[fmt]
 
     times = []

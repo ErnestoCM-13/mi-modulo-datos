@@ -20,8 +20,11 @@ def _read_selective(fmt, path):
     else:
         return pd.read_parquet(path, columns=cols)
 
-def benchmark_read(fmt, size, data_dir='data', repetitions=3):
-    path = get_path(data_dir, fmt, size)
+def benchmark_read(fmt, size, repetitions=3):
+    path = get_path(fmt, size)
+
+    if not path.exists():
+        raise FileNotFoundError(f"No se encontró el archivo para leer: {path}")
 
     # Lectura completa — mide tiempo y RAM
     full_times = []
