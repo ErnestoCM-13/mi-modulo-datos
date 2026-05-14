@@ -86,3 +86,41 @@ Esta carpeta incluye resultados de un benchmark realizado en entorno local para 
 ### Reporte
 
 El repositorio cuenta con un reporte en [`ejercicio-01-formatos/report.md`](ejercicio-01-formatos/report.md) con los resultados completos y el análisis de un benchamrk realizado en entorno local.
+
+---
+
+## Ejercicio 2 — El Motor de Consultas
+
+Benchmark de query engines que implementa 8 queries analíticas en pandas, DuckDB y Polars, valida que los resultados son numéricamente equivalentes entre los tres engines, y compara rendimiento en tiempo y memoria.
+
+### Uso
+
+```bash
+cd ejercicio-02-consultas
+uv run python benchmark.py
+```
+
+Por defecto lee `../data/transactions_1m_none.parquet`. Para especificar otra ruta o destino:
+
+```bash
+uv run python benchmark.py --parquet ../data/transactions_1m_snappy.parquet --output results/
+```
+
+Los resultados se guardan en `results/results_1m.json` e incluyen tiempos, pico de RAM,
+validación de equivalencia y el output de `EXPLAIN ANALYZE` para Q3, Q5 y Q6.
+
+### Correr desde cero
+
+El ejercicio 2 depende del Parquet generado en el ejercicio 1. Si aún no lo tienes:
+
+```bash
+cd ejercicio-01-formatos
+uv run python generate_data.py --size 1m
+uv run python benchmark_cli.py --size 1m --formats parquet_none
+cd ../ejercicio-02-consultas
+uv run python benchmark.py
+```
+
+### Resultados
+
+Los resultados completos y el análisis se encuentran en [`ejercicio-02-consultas/report.md`](ejercicio-02-consultas/report.md).
