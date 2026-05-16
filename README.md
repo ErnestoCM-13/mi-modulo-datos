@@ -124,3 +124,46 @@ uv run python benchmark.py
 ### Resultados
 
 Los resultados completos y el análisis se encuentran en [`ejercicio-02-consultas/report.md`](ejercicio-02-consultas/report.md).
+
+---
+
+## Ejercicio 3 — La Capa Transaccional
+ 
+Base de datos SQLite optimizada para consultas transaccionales por usuario individual, con pipeline de ingesta por chunks y benchmark comparativo contra DuckDB.
+
+### Uso
+
+**1. Regenerar la base desde cero**
+ 
+```bash
+uv run python ingest.py --csv ../data/transactions_1m.csv --wal
+```
+ 
+Esto crea `data/transactions.db` con la tabla, los índices y los 1M de registros.
+ 
+**2. Correr el benchmark**
+ 
+```bash
+uv run python benchmark_queries.py
+```
+ 
+### Correr todo desde cero
+ 
+```bash
+cd ejercicio-03-sqlite
+ 
+# Ingesta sin WAL
+uv run python ingest.py --csv ../data/transactions_1m.csv --no-wal
+ 
+# Ingesta con WAL
+uv run python ingest.py --csv ../data/transactions_1m.csv --wal
+ 
+# Benchmark de patrones
+uv run python benchmark_queries.py
+```
+ 
+Los resultados se guardan en `results/`.
+ 
+### Resultados
+ 
+Los resultados completos y el análisis se encuentran en [`ejercicio-03-sqlite/report.md`](ejercicio-03-sqlite/report.md).
