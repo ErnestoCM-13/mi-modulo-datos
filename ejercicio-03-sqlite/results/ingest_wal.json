@@ -1,0 +1,7 @@
+{
+  "rows": 1000000,
+  "chunk_size": 10000,
+  "wal": true,
+  "time_s": 109.21,
+  "db_size_mb": 213.2
+}
