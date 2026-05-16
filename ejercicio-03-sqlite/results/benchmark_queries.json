@@ -1,0 +1,94 @@
+{
+  "test_values": {
+    "transaction_id": "00000250-2be7-4e13-bfcc-ae9e3c8adfb8",
+    "user_id": 16189,
+    "max_timestamp": "2026-05-13 19:02:27.023179",
+    "one_month_ago": "2026-04-13T19:02:27.023179",
+    "three_months_ago": "2026-02-12T19:02:27.023179",
+    "country_code": "MX",
+    "min_transactions": 5
+  },
+  "sqlite_with_idx": {
+    "P1": {
+      "time_avg_s": 3.6e-05,
+      "explain": [
+        "SEARCH transactions USING INDEX sqlite_autoindex_transactions_1 (transaction_id=?)"
+      ]
+    },
+    "P2": {
+      "time_avg_s": 7.9e-05,
+      "explain": [
+        "SEARCH transactions USING INDEX idx_user_timestamp (user_id=?)"
+      ]
+    },
+    "P3": {
+      "time_avg_s": 2.5e-05,
+      "explain": [
+        "SEARCH transactions USING INDEX idx_user_timestamp (user_id=? AND timestamp>? AND timestamp<?)"
+      ]
+    },
+    "P4": {
+      "time_avg_s": 1.3e-05,
+      "explain": [
+        "SEARCH transactions USING INDEX idx_user_timestamp (user_id=? AND timestamp>?)"
+      ]
+    },
+    "P5": {
+      "time_avg_s": 0.009173,
+      "explain": [
+        "SEARCH transactions USING COVERING INDEX idx_country_user (country_code=?)"
+      ]
+    }
+  },
+  "sqlite_without_idx": {
+    "P1": {
+      "time_avg_s": 7.2e-05,
+      "explain": [
+        "SEARCH transactions USING INDEX sqlite_autoindex_transactions_1 (transaction_id=?)"
+      ]
+    },
+    "P2": {
+      "time_avg_s": 0.087094,
+      "explain": [
+        "SCAN transactions",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ]
+    },
+    "P3": {
+      "time_avg_s": 0.081203,
+      "explain": [
+        "SCAN transactions"
+      ]
+    },
+    "P4": {
+      "time_avg_s": 0.082531,
+      "explain": [
+        "SCAN transactions"
+      ]
+    },
+    "P5": {
+      "time_avg_s": 0.121065,
+      "explain": [
+        "SCAN transactions",
+        "USE TEMP B-TREE FOR GROUP BY"
+      ]
+    }
+  },
+  "duckdb_parquet": {
+    "P1": {
+      "time_avg_s": 0.062282
+    },
+    "P2": {
+      "time_avg_s": 0.02394
+    },
+    "P3": {
+      "time_avg_s": 0.017124
+    },
+    "P4": {
+      "time_avg_s": 0.008137
+    },
+    "P5": {
+      "time_avg_s": 0.014919
+    }
+  }
+}
