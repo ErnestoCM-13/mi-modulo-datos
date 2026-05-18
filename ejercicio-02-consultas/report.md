@@ -164,3 +164,18 @@ Para terminar, preparé una pequeña tabla para poder ver, de manera gráfica, e
 | SQL estándar y EXPLAIN ANALYZE | DuckDB |
 | Pipeline de producción en Python | Polars |
 | Integración con scikit-learn / scipy | Pandas |
+
+---
+
+## Registro de Tiempos y Desarrollo
+
+A continuación, detallo los tiempos aproximados que invertí en el primer ejercicio:
+
+| Fase | Tiempo empleado |
+|------|-----------------|
+| Investigación previa | 2-3 h |
+| Escritura de código | 2-3 h |
+| Interpretación y reporte | 3-4 h |
+| **Total acumulado** | **7-10 h** |
+
+Para este ejercicio, lo que más tiempo me costó invertir fue el proceso de comprender las diferencias que existen entre las APIs de Pandas, Polars y DuckDB. En particular, la curva de aprendizaje de Polars me pareció un poco más pronunciada por su sintaxis poco familiar para mí, en contraste con DuckDB, cuya integración me fue más natural al basarse en SQL puro.

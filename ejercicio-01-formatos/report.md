@@ -87,3 +87,18 @@ Los resultados del benchmark son claros: Snappy es el más equilibrado. Es el m�
 El CSV se puede quedar como un formato de **intercambio** (para pasar datos a alguien que use Excel o sistemas que no acepten Parquet), pero no como almacenamiento principal. Tardar 2.5 segundos contra 0.2 segundos podría parecer poco, pero en un flujo de trabajo real donde corres consultas todo el día, el tiempo perdido con CSV se vuelve mayor.
 
 JSONL queda totalmente descartado: su consumo de RAM y su lentitud lo hacen inviable para cualquier servidor con recursos limitados.
+
+---
+
+## Registro de Tiempos y Desarrollo
+
+A continuación, detallo los tiempos aproximados que invertí en el primer ejercicio. Los desgloce en tres fases: investigación previa, escritura del código, interpretación de resultados y reporte:
+
+| Fase | Tiempo empleado |
+|------|-----------------|
+| Investigación previa | 3-4 h |
+| Escritura de código | 2-3 h |
+| Interpretación y reporte | 3-4 h |
+| **Total acumulado** | **8-11 h** |
+
+Este ejercicio, al ser el primero, fue el que me consumió más tiempo en la fase de investigación previa, ya que tuve que familiarizarme con muchos conceptos que no conocía y a que traté de tener una visión general de todo el módulo de ejercicios para comenzar de la mejor forma posible.

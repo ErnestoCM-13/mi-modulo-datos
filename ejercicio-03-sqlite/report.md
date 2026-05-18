@@ -89,3 +89,16 @@ P5 muestra `USE TEMP B-TREE FOR GROUP BY`, por lo que, sin el índice `idx_count
 **DuckDB** sigue siendo superior para analytics: agregaciones sobre millones de filas, GROUP BY con muchas categorías o window functions. Esto ya quedó demostyrado en el ejercicio 2, con las 8 queries analíticas. En el caso de P5, parece demostrar un punto de cruce, ya que cuando la query empieza a parecerse más a analytics que a transaccional, la ventaja de SQLite se reduce.
 
 Ahora, si hablamos de un sistema de producción real, considero que la arquitectura correcta sería usar **ambos**: DuckDB (o un equivalente columnar) para el pipeline analítico, y SQLite (o PostgreSQL) para la capa transaccional que sirve a la API. Y, por lo que ví en el documento de los ejercicios, es exactamente lo que debemos construir en el Ejercicio 4.
+
+## Registro de Tiempos y Desarrollo
+
+A continuación, detallo los tiempos aproximados que invertí en el primer ejercicio:
+
+| Fase | Tiempo empleado |
+|------|-----------------|
+| Investigación previa | 2 h |
+| Escritura de código | 3-4 h |
+| Interpretación y reporte | 2-3 h |
+| **Total acumulado** | **7-9 h** |
+
+Para este ejercicio, la mayor cantidad de tiempo y esfuerzo estuvo en elegir los índices correctos para cumplir con los SLAs requeridos. Al no contar con una experiencia previa en la optimización de bases de datos, esta fase fue, en mi caso, un largo proceso de prueba y error un poco demandante.
