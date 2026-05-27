@@ -1,7 +1,7 @@
 # Mi-modulo-datos
 
 Repositorio del módulo **Python para Sistemas de Datos Modernos**.  
-Contiene 4 ejercicios que construyen un sistema de datos completo.
+Contiene 5 ejercicios que construyen un sistema de datos completo.
 
 ## Requisitos
 
@@ -20,221 +20,84 @@ Contiene 4 ejercicios que construyen un sistema de datos completo.
 ```
 mi-modulo-datos/
 ├── ejercicio-01-formatos/
-│   ├── storage_benchmark/
-│   ├── charts/
-│   ├── results/
-│   ├── generate_data.py
-│   ├── benchmark_cli.py
-│   ├── generate_charts.py
-│   └── report.md
 ├── ejercicio-02-consultas/
-│   ├── engines/
-│   ├── results/
-│   ├── benchmark.py
-│   └── report.md
 ├── ejercicio-03-sqlite/
-│   ├── results/
-│   ├── schema.sql
-│   ├── schema_design.md
-│   ├── ingest.py
-│   ├── benchmark_queries.py
-│   ├── report.md
-│   └── README.md
 ├── ejercicio-04-sistema/
-│   ├── app/
-│   ├── tests/
-│   ├── benchmarks/
-│   ├── architecture_decision.md
-│   └── README.md
+├── ejercicio-05-django/
 ├── data/                  ← generado localmente, no incluido en el repo
 ├── .gitignore
 └── README.md
 ```
 
 ## Ejercicio 1 — Formatos Bajo la Lupa
-
-Herramienta de benchmarking que compara el rendimiento de 5 formatos de almacenamiento (CSV, JSON Lines, Parquet sin compresión, Parquet Snappy, Parquet Gzip) sobre un dataset de hasta 1 millón de registros.
-
-### Uso
-
-**1. Moverse en la carpeta del ejercicio**
-
+ 
+Benchmarking de 5 formatos de almacenamiento sobre un dataset de hasta 1M de transacciones.
+ 
 ```bash
-cd ejercicio-01-formatos
-```
-
-**2. Generar el dataset**
-
-```bash
-uv run python generate_data.py --size 100k   # opciones: 100k, 500k, 1m
-```
-
-El archivo se guarda en `data/transactions_{size}.csv`.
-
-**3. Correr el benchmark**
-
-```bash
-uv run python benchmark_cli.py --size 100k --formats csv jsonl parquet_none parquet_snappy parquet_gzip
-```
-
-Los resultados se guardan en `ejercicio-01-formatos/results/results_{size}.json`.
-
-### Correr todo desde cero
-
-```bash
-cd ejercicio-01-formatos
-
+cd ejercicio-01-formatos && uv add pandas pyarrow numpy matplotlib
 for size in 100k 500k 1m; do
   uv run python benchmark_cli.py --size $size --formats csv jsonl parquet_none parquet_snappy parquet_gzip
 done
 ```
-
-### Charts
-
-El directorio `ejercicio-01-formatos/charts/` contiene gráficas usadas en el reporte.
-
-### Resultados
-
-Los resultados del benchmark se encuentran en `ejercicio-01-formatos/results/`.
-
-Esta carpeta incluye resultados de un benchmark realizado en entorno local para la redacción del reporte.
-
-### Reporte
-
-El repositorio cuenta con un reporte en [`ejercicio-01-formatos/report.md`](ejercicio-01-formatos/report.md) con los resultados completos y el análisis de un benchamrk realizado en entorno local.
-
+ 
+**Resultado:** Parquet Snappy es 12x más rápido que CSV en lectura, 21x en selectiva, 47% menos en disco.
+ 
 ---
-
+ 
 ## Ejercicio 2 — El Motor de Consultas
-
-Benchmark de query engines que implementa 8 queries analíticas en pandas, DuckDB y Polars, valida que los resultados son numéricamente equivalentes entre los tres engines, y compara rendimiento en tiempo y memoria.
-
-### Uso
-
+ 
+8 queries analíticas en pandas, DuckDB y Polars con validación de equivalencia y EXPLAIN ANALYZE.
+ 
 ```bash
-cd ejercicio-02-consultas
+cd ejercicio-02-consultas && uv add pandas polars duckdb pyarrow numpy
 uv run python benchmark.py
 ```
-
-Por defecto lee `../data/transactions_1m_none.parquet`. Para especificar otra ruta o destino:
-
-```bash
-uv run python benchmark.py --parquet ../data/transactions_1m_snappy.parquet --output results/
-```
-
-Los resultados se guardan en `results/results_1m.json` e incluyen tiempos, pico de RAM,
-validación de equivalencia y el output de `EXPLAIN ANALYZE` para Q3, Q5 y Q6.
-
-### Correr desde cero
-
-El ejercicio 2 depende del Parquet generado en el ejercicio 1. Si aún no lo tienes:
-
-```bash
-cd ejercicio-01-formatos
-uv run python generate_data.py --size 1m
-uv run python benchmark_cli.py --size 1m --formats parquet_none
-cd ../ejercicio-02-consultas
-uv run python benchmark.py
-```
-
-### Resultados
-
-Los resultados completos y el análisis se encuentran en [`ejercicio-02-consultas/report.md`](ejercicio-02-consultas/report.md).
-
+ 
+**Resultado:** Polars ganó las 8 queries. DuckDB mostró predicate pushdown en Q5 leyendo solo el 7.4% del archivo.
+ 
 ---
-
+ 
 ## Ejercicio 3 — La Capa Transaccional
  
-Base de datos SQLite optimizada para consultas transaccionales por usuario individual, con pipeline de ingesta por chunks y benchmark comparativo contra DuckDB.
-
-### Uso
-
-**1. Regenerar la base desde cero**
+SQLite optimizada para consultas transaccionales con benchmark de impacto de índices vs DuckDB.
  
 ```bash
-uv run python ingest.py --csv ../data/transactions_1m.csv --wal
-```
- 
-Esto crea `data/transactions.db` con la tabla, los índices y los 1M de registros.
- 
-**2. Correr el benchmark**
- 
-```bash
+cd ejercicio-03-sqlite && uv add pandas duckdb pyarrow
+uv run python ingest.py --parquet ../data/transactions_1m_none.parquet --wal
 uv run python benchmark_queries.py
 ```
  
-### Correr todo desde cero
+**Resultado:** SQLite con índices cumple los 5 SLAs (P1-P4 < 1ms, P5 = 9ms). Gana a DuckDB hasta 1,730x en lookups.
  
-```bash
-cd ejercicio-03-sqlite
- 
-# Ingesta sin WAL
-uv run python ingest.py --csv ../data/transactions_1m.csv --no-wal
- 
-# Ingesta con WAL
-uv run python ingest.py --csv ../data/transactions_1m.csv --wal
- 
-# Benchmark de patrones
-uv run python benchmark_queries.py
-```
- 
-Los resultados se guardan en `results/`.
- 
-### Resultados
- 
-Los resultados completos y el análisis se encuentran en [`ejercicio-03-sqlite/report.md`](ejercicio-03-sqlite/report.md).
-
 ---
-
+ 
 ## Ejercicio 4 — El Sistema Completo
-
-API REST con FastAPI que sirve datos de transacciones usando una arquitectura dual:
-DuckDB para endpoints analíticos y SQLite para endpoints transaccionales, con cache
-en memoria y TTL configurable.
-
-### Requisitos
-
-- Base SQLite del Ejercicio 3 (`data/transactions.db`)
-- Parquet del Ejercicio 1 (`../data/transactions_1m_none.parquet`)
-
-### Variables de entorno
-
-| Variable | Default | Descripción |
-|----------|---------|-------------|
-| `SQLITE_PATH` | `data/transactions.db` | Ruta a la base SQLite |
-| `PARQUET_PATH` | `../data/transactions_1m_none.parquet` | Ruta al archivo Parquet |
-
-### Arrancar el servidor
-
+ 
+API FastAPI con arquitectura dual DuckDB + SQLite, cache con TTL y suite de tests.
+ 
 ```bash
-uv run uvicorn app.main:app --reload
+cd ejercicio-04-sistema && uv add fastapi uvicorn pydantic duckdb pytest httpx numpy
+cp -r ../ejercicio-03-sqlite/data ./data
+PYTHONPATH=. uv run pytest tests/ -v
+PYTHONPATH=. uv run uvicorn app.main:app
 ```
-
-El servidor arranca en `http://localhost:8000`. Documentación interactiva en `http://localhost:8000/docs`.
-
-### Correr los tests
-
+ 
+**Resultado:** Todos los SLAs cumplidos. Analytics warm ~2ms (67x mejora por cache). 11 tests pasando.
+ 
+---
+ 
+## Ejercicio 5 — El Backend con Estructura
+ 
+Los mismos 6 endpoints reconstruidos con Django REST Framework: ORM, migraciones, autenticación por token y panel admin.
+ 
 ```bash
-uv run pytest tests/ -v
+cd ejercicio-05-django && uv add django djangorestframework pyarrow duckdb
+mkdir -p data
+uv run python manage.py migrate
+uv run python manage.py load_transactions --parquet ../data/transactions_1m_none.parquet
+uv run python manage.py createsuperuser
+uv run python manage.py test tests
+uv run python manage.py runserver
 ```
-
-### Correr el benchmark de latencia
-
-Con el servidor corriendo en una terminal:
-
-```bash
-uv run python benchmarks/run_latency.py
-```
-
-Genera `benchmarks/latency_report.md` con p50, p95, p99 por endpoint y análisis cold vs warm.
-
-### Endpoints
-
-| Método | Ruta | Backend | SLA |
-|--------|------|---------|-----|
-| GET | `/analytics/summary` | DuckDB + cache | < 500ms cold / < 20ms warm |
-| GET | `/analytics/top-merchants` | DuckDB + cache | < 500ms cold / < 20ms warm |
-| GET | `/users/{user_id}/transactions` | SQLite | < 80ms |
-| GET | `/users/{user_id}/stats` | SQLite | < 80ms |
-| POST | `/transactions/batch` | SQLite | < 2s para 500 registros |
-| GET | `/health` | Memoria | < 50ms |
+ 
+**Resultado:** 10 tests pasando. Endpoints analíticos con DuckDB + cache, transaccionales con ORM + índices del E3. Admin panel funcional con filtros y búsqueda.
