@@ -101,3 +101,17 @@ uv run python manage.py runserver
 ```
  
 **Resultado:** 10 tests pasando. Endpoints analíticos con DuckDB + cache, transaccionales con ORM + índices del E3. Admin panel funcional con filtros y búsqueda.
+
+---
+ 
+## Ejercicio 6 — El Pipeline de Datos
+ 
+Pipeline ETL idempotente: extrae, normaliza, valida, carga en SQLite y envía rechazos a cuarentena.
+ 
+```bash
+cd ejercicio-06-pipelines && uv add pytest
+uv run python pipeline.py --batch-size 500 --error-rate 0.15 --seed 42
+uv run pytest tests/ -v
+```
+ 
+**Resultado:** 500 extraídas → 432 válidas (86.4%) → 432 insertadas. 68 rechazadas con 8 tipos de error detectados. 14 tests pasando. Idempotencia verificada con INSERT OR IGNORE.

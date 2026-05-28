@@ -12,3 +12,7 @@ wheels/
 data/
 
 generate_charts.py
+
+quarantine/
+
+ejercicio-06-pipelines/results
