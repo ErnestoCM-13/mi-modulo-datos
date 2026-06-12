@@ -7,6 +7,7 @@ Contiene 5 ejercicios que construyen un sistema de datos completo.
 
 - Python 3.11 o superior
 - [uv](https://github.com/astral-sh/uv)
+- Docker (para E07 y E08)
 
 ### Instalación
 
@@ -24,6 +25,8 @@ mi-modulo-datos/
 ├── ejercicio-03-sqlite/
 ├── ejercicio-04-sistema/
 ├── ejercicio-05-django/
+├── ejercicio-06-pipelines/
+├── ejercicio-07-contenedores/
 ├── data/                  ← generado localmente, no incluido en el repo
 ├── .gitignore
 └── README.md
@@ -115,3 +118,25 @@ uv run pytest tests/ -v
 ```
  
 **Resultado:** 500 extraídas → 432 válidas (86.4%) → 432 insertadas. 68 rechazadas con 8 tipos de error detectados. 14 tests pasando. Idempotencia verificada con INSERT OR IGNORE.
+
+---
+ 
+## Ejercicio 7 — De tu Máquina al Mundo
+ 
+Sistema del E04 contenerizado con Docker: multi-stage build, setup automático, healthcheck y JSON logging.
+ 
+```bash
+cd ejercicio-07-contenedores
+cp .env.example .env
+docker compose up --build
+```
+ 
+En otra terminal:
+```bash
+docker compose ps
+curl http://localhost:8000/health
+docker compose logs -f api
+docker compose down -v
+```
+ 
+**Resultado:** Un solo comando levanta todo. Imagen < 300MB. Healthcheck cada 30s. Logs en JSON a stdout.
