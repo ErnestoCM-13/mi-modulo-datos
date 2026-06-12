@@ -1,0 +1,23 @@
+services:
+  setup:
+    build: .
+    command: python scripts/setup_db.py
+    volumes:
+      - db-data:/data/db
+      - ${PARQUET_DIR:-./../data}:/data/parquet:ro
+    env_file: .env
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - db-data:/data/db
+      - ${PARQUET_DIR:-./../data}:/data/parquet:ro
+    env_file: .env
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+volumes:
+  db-data:
