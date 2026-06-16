@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+.git
+.gitignore
+.env
+data/
+*.parquet
+*.csv
+*.db
+*.db-wal
+*.db-shm
+README.md
+report.md
+decisions.md
+.pytest_cache
+tests/
