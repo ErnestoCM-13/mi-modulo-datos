@@ -15,5 +15,6 @@ dependencies = [
     "polars>=1.40.1",
     "pyarrow>=24.0.0",
     "pytest>=9.0.3",
+    "python-multipart>=0.0.32",
     "uvicorn>=0.46.0",
 ]
