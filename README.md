@@ -20,21 +20,22 @@ Contiene 5 ejercicios que construyen un sistema de datos completo.
 
 ```
 mi-modulo-datos/
-├── ejercicio-01-formatos/
-├── ejercicio-02-consultas/
-├── ejercicio-03-sqlite/
-├── ejercicio-04-sistema/
-├── ejercicio-05-django/
-├── ejercicio-06-pipelines/
-├── ejercicio-07-contenedores/
-├── data/                  ← generado localmente, no incluido en el repo
+├── ejercicio-01-formatos/       ← Benchmarking de formatos de almacenamiento
+├── ejercicio-02-consultas/      ← Query engines: pandas, DuckDB, Polars
+├── ejercicio-03-sqlite/         ← Capa transaccional con SQLite e índices
+├── ejercicio-04-sistema/        ← API FastAPI con arquitectura dual
+├── ejercicio-05-django/         ← API con Django REST Framework
+├── ejercicio-06-pipelines/      ← Pipeline ETL idempotente
+├── ejercicio-07-contenedores/   ← Docker: multi-stage, compose, healthcheck
+├── ejercicio-08-final/          ← Proyecto final: sistema integrado
+├── data/                        ← Generado localmente, no incluido en el repo
 ├── .gitignore
 └── README.md
 ```
 
 ## Ejercicio 1 — Formatos Bajo la Lupa
  
-Benchmarking de 5 formatos de almacenamiento sobre un dataset de hasta 1M de transacciones.
+Benchmarking de CSV, JSONL, Parquet (none/snappy/gzip) sobre 100K, 500K y 1M transacciones.
  
 ```bash
 cd ejercicio-01-formatos && uv add pandas pyarrow numpy matplotlib
@@ -140,3 +141,23 @@ docker compose down -v
 ```
  
 **Resultado:** Un solo comando levanta todo. Imagen < 300MB. Healthcheck cada 30s. Logs en JSON a stdout.
+
+---
+
+## Ejercicio 8 — El Proyecto Final
+ 
+Sistema integrado: 7 endpoints, pipeline CSV, detección de anomalías, Docker.
+ 
+```bash
+cd ejercicio-08-final && cp .env.example .env
+docker compose up --build
+```
+ 
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/analytics/summary
+curl "http://localhost:8000/anomalies/failed-transactions?threshold=3&days=30"
+curl -X POST -F "file=@test.csv" http://localhost:8000/ingest/csv
+```
+ 
+**Resultado:** 7 endpoints funcionales. 14 tests pasando. Pipeline con reporte de errores.
